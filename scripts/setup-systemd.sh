@@ -204,6 +204,7 @@ Type=simple
 User=bluesky
 WorkingDirectory=/home/bluesky/social-app
 Environment=NODE_ENV=production
+Environment=CI=true
 Environment=PORT=8100
 Environment=BSKY_SERVICE_URL=https://bsky.$DOMAIN
 Environment=BSKY_PDS_URL=https://pdsapi.$DOMAIN

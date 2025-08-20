@@ -61,8 +61,9 @@ echo "✅ atproto built successfully"
 echo ""
 echo "🔨 Step 4: Building social-app (Node.js 20)..."
 cd social-app
-sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 20 && yarn install'
-sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 20 && yarn build-web'
+# Set CI environment to skip husky git hooks
+sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 20 && CI=true yarn install'
+sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 20 && CI=true yarn build-web'
 cd ..
 echo "✅ social-app built successfully"
 
