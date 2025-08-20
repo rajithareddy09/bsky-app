@@ -36,7 +36,7 @@ apt install -y curl wget git build-essential python3 python3-pip software-proper
 # Install nvm for Node.js version management
 echo "📦 Installing nvm (Node Version Manager)..."
 # Install nvm for the bluesky user
-sudo -u bluesky bash -c 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash'
+sudo -u root bash -c 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash'
 
 # Add nvm to bash profile for bluesky user
 echo "📝 Configuring nvm for bluesky user..."
@@ -50,14 +50,14 @@ EOF
 
 # Install Node.js versions for different components
 echo "📦 Installing Node.js versions..."
-sudo -u bluesky bash -c 'source ~/.bashrc && nvm install 18'
-sudo -u bluesky bash -c 'source ~/.bashrc && nvm install 20'
-sudo -u bluesky bash -c 'source ~/.bashrc && nvm alias default 18'
+sudo -u root bash -c 'source ~/.bashrc && nvm install 18'
+sudo -u root bash -c 'source ~/.bashrc && nvm install 20'
+sudo -u root bash -c 'source ~/.bashrc && nvm alias default 18'
 
 # Install pnpm globally for both Node.js versions
 echo "📦 Installing pnpm..."
-sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 18 && npm install -g pnpm'
-sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 20 && npm install -g pnpm'
+sudo -u root bash -c 'source ~/.bashrc && nvm use 18 && npm install -g pnpm'
+sudo -u root bash -c 'source ~/.bashrc && nvm use 20 && npm install -g pnpm'
 
 # Install PostgreSQL
 echo "📦 Installing PostgreSQL..."
@@ -111,9 +111,9 @@ ufw reload
 
 # Create PostgreSQL database and user
 echo "🗄️ Setting up PostgreSQL database..."
-sudo -u postgres psql -c "CREATE DATABASE bluesky;"
-sudo -u postgres psql -c "CREATE USER bluesky WITH ENCRYPTED PASSWORD 'bluesky_password';"
-sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE bluesky TO bluesky;"
+#sudo -u postgres psql -c "CREATE DATABASE bluesky;"
+#sudo -u postgres psql -c "CREATE USER bluesky WITH ENCRYPTED PASSWORD 'bluesky_password';"
+#sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE bluesky TO bluesky;"
 
 # Verify installations
 echo "✅ Verifying installations..."
