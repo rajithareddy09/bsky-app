@@ -110,18 +110,18 @@ ufw allow 443/tcp
 ufw reload
 
 # Create PostgreSQL database and user
-#echo "🗄️ Setting up PostgreSQL database..."
-#sudo -u postgres psql -c "CREATE DATABASE bluesky;"
-#sudo -u postgres psql -c "CREATE USER bluesky WITH ENCRYPTED PASSWORD 'bluesky_password';"
-#sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE bluesky TO bluesky;"
+echo "🗄️ Setting up PostgreSQL database..."
+sudo -u postgres psql -c "CREATE DATABASE bluesky;"
+sudo -u postgres psql -c "CREATE USER bluesky WITH ENCRYPTED PASSWORD 'bluesky_password';"
+sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE bluesky TO bluesky;"
 
 # Verify installations
 echo "✅ Verifying installations..."
 echo "nvm installed for bluesky user"
-echo "Node.js 18: $(sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 18 && node --version')"
-echo "Node.js 20: $(sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 20 && node --version')"
-echo "pnpm (Node 18): $(sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 18 && pnpm --version')"
-echo "pnpm (Node 20): $(sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 20 && pnpm --version')"
+echo "Node.js 18: $(sudo -u root bash -c 'source ~/.bashrc && nvm use 18 && node --version')"
+echo "Node.js 20: $(sudo -u root bash -c 'source ~/.bashrc && nvm use 20 && node --version')"
+echo "pnpm (Node 18): $(sudo -u root bash -c 'source ~/.bashrc && nvm use 18 && pnpm --version')"
+echo "pnpm (Node 20): $(sudo -u root bash -c 'source ~/.bashrc && nvm use 20 && pnpm --version')"
 echo "PostgreSQL version: $(psql --version)"
 echo "Redis version: $(redis-server --version | head -1)"
 echo "Nginx version: $(nginx -v 2>&1)"
