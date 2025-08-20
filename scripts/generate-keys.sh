@@ -49,9 +49,9 @@ PDS_PLC_ROTATION_KEY_K256_PRIVATE_KEY_HEX=$(generate_hex 32)
 echo "✅ PDS PLC Rotation Key (K256) generated"
 
 echo "🔐 Generating AppView keys..."
-# AppView Service Signing Key
-BSKY_SERVICE_SIGNING_KEY=$(generate_base64 32)
-echo "✅ AppView Service Signing Key generated"
+# AppView Service Signing Key (must be hex/base16)
+BSKY_SERVICE_SIGNING_KEY=$(generate_hex 32)
+echo "✅ AppView Service Signing Key generated (hex)"
 
 echo "🔐 Generating Ozone keys..."
 # Ozone Signing Key
@@ -59,9 +59,10 @@ OZONE_SIGNING_KEY_HEX=$(generate_hex 32)
 echo "✅ Ozone Signing Key generated"
 
 echo "🔐 Generating secrets..."
-# DPOP Secret
-PDS_DPOP_SECRET=$(generate_base64 32)
-echo "✅ DPOP Secret generated"
+# Generate DPOP secret (must be exactly 64 characters)
+echo "🔐 Generating DPOP secret..."
+DPOP_SECRET=$(openssl rand -hex 32)
+echo "✅ DPOP secret generated (64 chars): ${DPOP_SECRET:0:10}..."
 
 # JWT Secret
 PDS_JWT_SECRET=$(generate_base64 32)
@@ -93,7 +94,7 @@ echo "$PDS_REPO_SIGNING_KEY_K256_PRIVATE_KEY_HEX" > keys/pds_repo_signing_key_k2
 echo "$PDS_PLC_ROTATION_KEY_K256_PRIVATE_KEY_HEX" > keys/pds_plc_rotation_key_k256_private_key_hex.txt
 echo "$BSKY_SERVICE_SIGNING_KEY" > keys/bsky_service_signing_key.txt
 echo "$OZONE_SIGNING_KEY_HEX" > keys/ozone_signing_key_hex.txt
-echo "$PDS_DPOP_SECRET" > keys/pds_dpop_secret.txt
+echo "$DPOP_SECRET" > keys/pds_dpop_secret.txt
 echo "$PDS_JWT_SECRET" > keys/pds_jwt_secret.txt
 echo "$BSYNC_API_KEYS" > keys/bsync_api_keys.txt
 echo "$BSKY_COURIER_API_KEY" > keys/bsky_courier_api_key.txt
@@ -131,6 +132,33 @@ BSYNC_PUBLIC_URL=https://bsync.yourdomain.com
 INTROSPECT_PUBLIC_URL=https://introspect.yourdomain.com
 CHAT_PUBLIC_URL=https://chat.yourdomain.com
 
+# AppView Configuration
+BSKY_PUBLIC_URL=https://bsky.yourdomain.com
+BSKY_SERVER_DID=did:web:bsky.yourdomain.com
+BSKY_DID_PLC_URL=https://plc.yourdomain.com
+BSKY_DATAPLANE_URLS=https://pdsapi.yourdomain.com
+BSKY_PORT=3000
+BSKY_VERSION=1.0.0
+BSKY_IMG_URI_ENDPOINT=https://bsky.yourdomain.com/img
+BSKY_COURIER_URL=https://chat.yourdomain.com
+BSKY_COURIER_API_KEY=$COURIER_API_KEY
+BSKY_BSYNC_URL=https://bsync.yourdomain.com
+BSKY_BSYNC_API_KEY=$BSYNC_API_KEY
+BSKY_BLOB_CACHE_LOC=/home/bluesky/data/cache
+
+# Ozone Configuration
+OZONE_PUBLIC_URL=https://ozone.yourdomain.com
+OZONE_SERVER_DID=did:web:ozone.yourdomain.com
+OZONE_APPVIEW_URL=https://bsky.yourdomain.com
+OZONE_APPVIEW_DID=did:web:bsky.yourdomain.com
+OZONE_PDS_URL=https://pdsapi.yourdomain.com
+OZONE_PDS_DID=did:web:pdsapi.yourdomain.com
+OZONE_DID_PLC_URL=https://plc.yourdomain.com
+OZONE_ADMIN_PASSWORD=$OZONE_ADMIN_PASSWORD
+OZONE_SIGNING_KEY_HEX=$OZONE_SIGNING_KEY_HEX
+MOD_SERVICE_DID=did:web:ozone.yourdomain.com
+OZONE_PORT=3001
+
 # Database Configuration
 POSTGRES_PASSWORD=$POSTGRES_PASSWORD
 DB_POSTGRES_URL=postgresql://bluesky:$POSTGRES_PASSWORD@localhost:5432/bluesky
@@ -142,7 +170,7 @@ REDIS_PORT=6379
 # PDS Keys and Secrets
 PDS_REPO_SIGNING_KEY_K256_PRIVATE_KEY_HEX=$PDS_REPO_SIGNING_KEY_K256_PRIVATE_KEY_HEX
 PDS_PLC_ROTATION_KEY_K256_PRIVATE_KEY_HEX=$PDS_PLC_ROTATION_KEY_K256_PRIVATE_KEY_HEX
-PDS_DPOP_SECRET=$PDS_DPOP_SECRET
+PDS_DPOP_SECRET=$DPOP_SECRET
 PDS_JWT_SECRET=$PDS_JWT_SECRET
 PDS_ADMIN_PASSWORD=$PDS_ADMIN_PASSWORD
 
@@ -172,6 +200,12 @@ WEB_PORT=8100
 # Data Directories
 PDS_DATA_DIRECTORY=/home/bluesky/data/pds
 PDS_BLOBSTORE_DISK_LOCATION=/home/bluesky/data/blobs
+PDS_BLOBSTORE_DISK_ENABLED=true
+PDS_BLOBSTORE_DISK_TEMP_LOCATION=/home/bluesky/data/blobs/temp
+PDS_BLOBSTORE_DISK_MAX_FILE_SIZE=104857600
+PDS_BLOBSTORE_DISK_MAX_FILE_SIZE_KB=102400
+PDS_BLOBSTORE_DISK_MAX_FILE_SIZE_MB=100
+PDS_BLOBSTORE_DISK_MAX_FILE_SIZE_GB=0.1
 BSKY_BLOB_CACHE_LOC=/home/bluesky/data/cache
 
 # OAuth Configuration

@@ -45,7 +45,7 @@ fi
 
 # Create data directories
 echo "📁 Creating data directories..."
-mkdir -p /home/bluesky/data/{pds,blobs,cache}
+mkdir -p /home/bluesky/data/{pds,blobs,temp,cache}
 chown -R bluesky:bluesky /home/bluesky/data
 echo "✅ Data directories created"
 
@@ -67,6 +67,12 @@ Environment=PDS_PORT=2583
 Environment=PDS_SERVICE_DID=did:web:pdsapi.$DOMAIN
 Environment=PDS_DATA_DIRECTORY=/home/bluesky/data/pds
 Environment=PDS_BLOBSTORE_DISK_LOCATION=/home/bluesky/data/blobs
+Environment=PDS_BLOBSTORE_DISK_ENABLED=true
+Environment=PDS_BLOBSTORE_DISK_TEMP_LOCATION=/home/bluesky/data/blobs/temp
+Environment=PDS_BLOBSTORE_DISK_MAX_FILE_SIZE=104857600
+Environment=PDS_BLOBSTORE_DISK_MAX_FILE_SIZE_KB=102400
+Environment=PDS_BLOBSTORE_DISK_MAX_FILE_SIZE_MB=100
+Environment=PDS_BLOBSTORE_DISK_MAX_FILE_SIZE_GB=0.1
 Environment=PDS_REPO_SIGNING_KEY_K256_PRIVATE_KEY_HEX=\${PDS_REPO_SIGNING_KEY_K256_PRIVATE_KEY_HEX}
 Environment=PDS_PLC_ROTATION_KEY_K256_PRIVATE_KEY_HEX=\${PDS_PLC_ROTATION_KEY_K256_PRIVATE_KEY_HEX}
 Environment=PDS_DPOP_SECRET=\${PDS_DPOP_SECRET}
@@ -105,13 +111,12 @@ Environment=NODE_ENV=production
 Environment=BSKY_PUBLIC_URL=https://bsky.$DOMAIN
 Environment=BSKY_SERVER_DID=did:web:bsky.$DOMAIN
 Environment=BSKY_DID_PLC_URL=https://plc.$DOMAIN
-Environment=BSKY_DATAPLANE_URL=https://pdsapi.$DOMAIN
+Environment=BSKY_DATAPLANE_URLS=https://pdsapi.$DOMAIN
 Environment=BSKY_SERVICE_SIGNING_KEY=\${BSKY_SERVICE_SIGNING_KEY}
 Environment=BSKY_ADMIN_PASSWORDS=\${BSKY_ADMIN_PASSWORDS}
 Environment=BSKY_PORT=3000
 Environment=BSKY_VERSION=1.0.0
 Environment=BSKY_IMG_URI_ENDPOINT=https://bsky.$DOMAIN/img
-Environment=BSKY_BLOB_CACHE_LOC=/home/bluesky/data/cache
 Environment=BSKY_COURIER_URL=https://chat.$DOMAIN
 Environment=BSKY_COURIER_API_KEY=\${BSKY_COURIER_API_KEY}
 Environment=BSKY_BSYNC_URL=https://bsync.$DOMAIN
@@ -151,6 +156,8 @@ Environment=OZONE_DB_POSTGRES_URL=postgresql://bluesky:\${POSTGRES_PASSWORD}@loc
 Environment=OZONE_DID_PLC_URL=https://plc.$DOMAIN
 Environment=OZONE_ADMIN_PASSWORD=\${OZONE_ADMIN_PASSWORD}
 Environment=OZONE_SIGNING_KEY_HEX=\${OZONE_SIGNING_KEY_HEX}
+Environment=MOD_SERVICE_DID=did:web:ozone.$DOMAIN
+Environment=OZONE_PORT=3001
 Environment=LOG_LEVEL=info
 ExecStart=/bin/bash -c 'source /home/bluesky/.bashrc && nvm use 18 && node --enable-source-maps api.js'
 Restart=always

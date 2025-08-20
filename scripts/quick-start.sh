@@ -27,6 +27,75 @@ echo ""
 echo "🌐 Using domain: $DOMAIN"
 echo ""
 
+# Step 1: Install dependencies
+echo "📦 Step 1: Installing system dependencies..."
+./scripts/install-dependencies.sh
+
+# Step 2: Clone repositories
+echo ""
+echo "📥 Step 2: Cloning repositories..."
+if [ ! -d "atproto" ]; then
+    git clone https://github.com/bluesky-social/atproto.git
+    echo "✅ atproto repository cloned"
+else
+    echo "✅ atproto repository already exists"
+fi
+
+if [ ! -d "social-app" ]; then
+    git clone https://github.com/bluesky-social/social-app.git
+    echo "✅ social-app repository cloned"
+else
+    echo "✅ social-app repository already exists"
+fi
+
+# Step 3: Build atproto (using Node.js 18)
+echo ""
+echo "🔨 Step 3: Building atproto (Node.js 18)..."
+cd atproto
+sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 18 && pnpm install'
+sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 18 && pnpm build'
+cd ..
+echo "✅ atproto built successfully"
+
+# Step 4: Build social-app (using Node.js 20)
+echo ""
+echo "🔨 Step 4: Building social-app (Node.js 20)..."
+cd social-app
+# Set CI environment to skip husky git hooks
+sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 20 && CI=true yarn install'
+sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 20 && CI=true yarn build-web'
+cd ..
+echo "✅ social-app built successfully"
+
+# Step 5: Generate keys
+echo ""
+echo "🔑 Step 5: Generating cryptographic keys..."
+./scripts/generate-keys.sh
+
+# Step 6: Configure environment
+echo ""
+echo "⚙️ Step 6: Configuring environment..."
+if [ ! -f ".env" ]; then
+    cp env.example .env
+    echo "✅ Environment file created from template"
+else
+    echo "✅ Environment file already exists"
+fi
+
+echo ""
+echo "📝 Please edit the .env file with your domain configuration:"
+echo "   nano .env"
+echo ""
+echo "Make sure to update these variables:"
+echo "   PDS_HOSTNAME=pdsapi.$DOMAIN"
+echo "   BSKY_HOSTNAME=bsky.$DOMAIN"
+echo "   OZONE_HOSTNAME=ozone.$DOMAIN"
+echo "   PLC_HOSTNAME=plc.$DOMAIN"
+echo "   BSYNC_HOSTNAME=bsync.$DOMAIN"
+echo "   INTROSPECT_HOSTNAME=introspect.$DOMAIN"
+echo "   CHAT_HOSTNAME=chat.$DOMAIN"
+echo ""
+read -p "Press Enter after you've configured the .env file..."
 
 # Step 7: Set up systemd services
 echo ""
