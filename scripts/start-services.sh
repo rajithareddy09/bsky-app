@@ -30,7 +30,7 @@ wait_for_service() {
                 fi
             elif [ "$service_name" = "bluesky-appview" ]; then
                 # Test AppView health endpoint
-                if curl -s -f "http://localhost:3000/xrpc/_health" > /dev/null 2>&1; then
+                if curl -s -f "http://localhost:2584/xrpc/_health" > /dev/null 2>&1; then
                     echo "✅ $service_name is ready and responding"
                     return 0
                 fi
