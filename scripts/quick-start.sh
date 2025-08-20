@@ -31,22 +31,7 @@ echo ""
 echo "📦 Step 1: Installing system dependencies..."
 ./scripts/install-dependencies.sh
 
-# Step 2: Clone repositories
-echo ""
-echo "📥 Step 2: Cloning repositories..."
-if [ ! -d "atproto" ]; then
-    git clone https://github.com/bluesky-social/atproto.git
-    echo "✅ atproto repository cloned"
-else
-    echo "✅ atproto repository already exists"
-fi
 
-if [ ! -d "social-app" ]; then
-    git clone https://github.com/bluesky-social/social-app.git
-    echo "✅ social-app repository cloned"
-else
-    echo "✅ social-app repository already exists"
-fi
 
 # Step 3: Build atproto
 echo ""
