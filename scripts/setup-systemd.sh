@@ -49,7 +49,7 @@ mkdir -p /home/bluesky/data/{pds,blobs,cache}
 chown -R bluesky:bluesky /home/bluesky/data
 echo "✅ Data directories created"
 
-# Create PDS service
+# Create PDS service (using Node.js 18)
 echo "📝 Creating PDS service..."
 cat > /etc/systemd/system/bluesky-pds.service << EOF
 [Unit]
@@ -78,7 +78,7 @@ Environment=PDS_BSKY_APP_VIEW_DID=did:web:bsky.$DOMAIN
 Environment=PDS_OAUTH_PROVIDER_NAME=Your Bluesky Instance
 Environment=PDS_OAUTH_PROVIDER_PRIMARY_COLOR=#0085ff
 Environment=LOG_LEVEL=info
-ExecStart=/usr/bin/node --enable-source-maps index.js
+ExecStart=/bin/bash -c 'source /home/bluesky/.bashrc && nvm use 18 && node --enable-source-maps index.js'
 Restart=always
 RestartSec=10
 StandardOutput=journal
@@ -89,7 +89,7 @@ SyslogIdentifier=bluesky-pds
 WantedBy=multi-user.target
 EOF
 
-# Create AppView service
+# Create AppView service (using Node.js 18)
 echo "📝 Creating AppView service..."
 cat > /etc/systemd/system/bluesky-appview.service << EOF
 [Unit]
@@ -117,7 +117,7 @@ Environment=BSKY_COURIER_API_KEY=\${BSKY_COURIER_API_KEY}
 Environment=BSKY_BSYNC_URL=https://bsync.$DOMAIN
 Environment=BSKY_BSYNC_API_KEY=\${BSKY_BSYNC_API_KEY}
 Environment=LOG_LEVEL=info
-ExecStart=/usr/bin/node --enable-source-maps api.js
+ExecStart=/bin/bash -c 'source /home/bluesky/.bashrc && nvm use 18 && node --enable-source-maps api.js'
 Restart=always
 RestartSec=10
 StandardOutput=journal
@@ -128,7 +128,7 @@ SyslogIdentifier=bluesky-appview
 WantedBy=multi-user.target
 EOF
 
-# Create Ozone service
+# Create Ozone service (using Node.js 18)
 echo "📝 Creating Ozone service..."
 cat > /etc/systemd/system/bluesky-ozone.service << EOF
 [Unit]
@@ -152,7 +152,7 @@ Environment=OZONE_DID_PLC_URL=https://plc.$DOMAIN
 Environment=OZONE_ADMIN_PASSWORD=\${OZONE_ADMIN_PASSWORD}
 Environment=OZONE_SIGNING_KEY_HEX=\${OZONE_SIGNING_KEY_HEX}
 Environment=LOG_LEVEL=info
-ExecStart=/usr/bin/node --enable-source-maps api.js
+ExecStart=/bin/bash -c 'source /home/bluesky/.bashrc && nvm use 18 && node --enable-source-maps api.js'
 Restart=always
 RestartSec=10
 StandardOutput=journal
@@ -163,7 +163,7 @@ SyslogIdentifier=bluesky-ozone
 WantedBy=multi-user.target
 EOF
 
-# Create Bsync service
+# Create Bsync service (using Node.js 18)
 echo "📝 Creating Bsync service..."
 cat > /etc/systemd/system/bluesky-bsync.service << EOF
 [Unit]
@@ -180,7 +180,7 @@ Environment=BSYNC_PORT=3002
 Environment=BSYNC_DB_POSTGRES_URL=postgresql://bluesky:\${POSTGRES_PASSWORD}@localhost:5432/bluesky
 Environment=BSYNC_API_KEYS=\${BSYNC_API_KEYS}
 Environment=LOG_LEVEL=info
-ExecStart=/usr/bin/node --enable-source-maps index.js
+ExecStart=/bin/bash -c 'source /home/bluesky/.bashrc && nvm use 18 && node --enable-source-maps index.js'
 Restart=always
 RestartSec=10
 StandardOutput=journal
@@ -191,7 +191,7 @@ SyslogIdentifier=bluesky-bsync
 WantedBy=multi-user.target
 EOF
 
-# Create Web Frontend service
+# Create Web Frontend service (using Node.js 20)
 echo "📝 Creating Web Frontend service..."
 cat > /etc/systemd/system/bluesky-web.service << EOF
 [Unit]
@@ -208,7 +208,7 @@ Environment=PORT=8100
 Environment=BSKY_SERVICE_URL=https://bsky.$DOMAIN
 Environment=BSKY_PDS_URL=https://pdsapi.$DOMAIN
 Environment=BSKY_OAUTH_REDIRECT_URL=https://app.$DOMAIN
-ExecStart=/usr/bin/yarn start-web
+ExecStart=/bin/bash -c 'source /home/bluesky/.bashrc && nvm use 20 && yarn start-web'
 Restart=always
 RestartSec=10
 StandardOutput=journal
@@ -236,11 +236,11 @@ echo "🎉 Systemd services created and enabled!"
 echo ""
 echo "📋 Created services:"
 echo "=================================="
-echo "• bluesky-pds      - Personal Data Server"
-echo "• bluesky-appview  - AppView API"
-echo "• bluesky-ozone    - Moderation interface"
-echo "• bluesky-bsync    - Background sync"
-echo "• bluesky-web      - Web frontend"
+echo "• bluesky-pds      - Personal Data Server (Node.js 18)"
+echo "• bluesky-appview  - AppView API (Node.js 18)"
+echo "• bluesky-ozone    - Moderation interface (Node.js 18)"
+echo "• bluesky-bsync    - Background sync (Node.js 18)"
+echo "• bluesky-web      - Web frontend (Node.js 20)"
 echo ""
 echo "🚀 Management commands:"
 echo "=================================="

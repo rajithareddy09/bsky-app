@@ -31,23 +31,38 @@ echo ""
 echo "📦 Step 1: Installing system dependencies..."
 ./scripts/install-dependencies.sh
 
-
-
-# Step 3: Build atproto
+# Step 2: Clone repositories
 echo ""
-echo "🔨 Step 3: Building atproto..."
+echo "📥 Step 2: Cloning repositories..."
+if [ ! -d "atproto" ]; then
+    git clone https://github.com/bluesky-social/atproto.git
+    echo "✅ atproto repository cloned"
+else
+    echo "✅ atproto repository already exists"
+fi
+
+if [ ! -d "social-app" ]; then
+    git clone https://github.com/bluesky-social/social-app.git
+    echo "✅ social-app repository cloned"
+else
+    echo "✅ social-app repository already exists"
+fi
+
+# Step 3: Build atproto (using Node.js 18)
+echo ""
+echo "🔨 Step 3: Building atproto (Node.js 18)..."
 cd atproto
-pnpm install
-pnpm build
+sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 18 && pnpm install'
+sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 18 && pnpm build'
 cd ..
 echo "✅ atproto built successfully"
 
-# Step 4: Build social-app
+# Step 4: Build social-app (using Node.js 20)
 echo ""
-echo "🔨 Step 4: Building social-app..."
+echo "🔨 Step 4: Building social-app (Node.js 20)..."
 cd social-app
-yarn install
-yarn build-web
+sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 20 && yarn install'
+sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 20 && yarn build-web'
 cd ..
 echo "✅ social-app built successfully"
 

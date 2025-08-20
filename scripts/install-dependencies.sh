@@ -33,14 +33,31 @@ apt update && apt upgrade -y
 echo "📦 Installing basic utilities..."
 apt install -y curl wget git build-essential python3 python3-pip software-properties-common
 
-# Install Node.js 18
-echo "📦 Installing Node.js 18..."
-curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-apt-get install -y nodejs
+# Install nvm for Node.js version management
+echo "📦 Installing nvm (Node Version Manager)..."
+# Install nvm for the bluesky user
+sudo -u bluesky bash -c 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash'
 
-# Install pnpm
+# Add nvm to bash profile for bluesky user
+echo "📝 Configuring nvm for bluesky user..."
+cat >> /home/bluesky/.bashrc << 'EOF'
+
+# NVM Configuration
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+EOF
+
+# Install Node.js versions for different components
+echo "📦 Installing Node.js versions..."
+sudo -u bluesky bash -c 'source ~/.bashrc && nvm install 18'
+sudo -u bluesky bash -c 'source ~/.bashrc && nvm install 20'
+sudo -u bluesky bash -c 'source ~/.bashrc && nvm alias default 18'
+
+# Install pnpm globally for both Node.js versions
 echo "📦 Installing pnpm..."
-npm install -g pnpm
+sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 18 && npm install -g pnpm'
+sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 20 && npm install -g pnpm'
 
 # Install PostgreSQL
 echo "📦 Installing PostgreSQL..."
@@ -100,9 +117,11 @@ sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE bluesky TO bluesky;"
 
 # Verify installations
 echo "✅ Verifying installations..."
-echo "Node.js version: $(node --version)"
-echo "npm version: $(npm --version)"
-echo "pnpm version: $(pnpm --version)"
+echo "nvm installed for bluesky user"
+echo "Node.js 18: $(sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 18 && node --version')"
+echo "Node.js 20: $(sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 20 && node --version')"
+echo "pnpm (Node 18): $(sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 18 && pnpm --version')"
+echo "pnpm (Node 20): $(sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 20 && pnpm --version')"
 echo "PostgreSQL version: $(psql --version)"
 echo "Redis version: $(redis-server --version | head -1)"
 echo "Nginx version: $(nginx -v 2>&1)"
@@ -112,7 +131,10 @@ echo "🎉 Dependencies installation completed!"
 echo ""
 echo "📋 Installed components:"
 echo "=================================="
-echo "✅ Node.js 18 + npm + pnpm"
+echo "✅ nvm (Node Version Manager)"
+echo "✅ Node.js 18 (for atproto backend)"
+echo "✅ Node.js 20 (for social-app frontend)"
+echo "✅ pnpm for both Node.js versions"
 echo "✅ PostgreSQL 15+"
 echo "✅ Redis 7+"
 echo "✅ Nginx"
