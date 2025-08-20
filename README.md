@@ -10,20 +10,21 @@ This repository contains everything you need to deploy your own complete Bluesky
 - **Security Focused**: Firewall, fail2ban, rate limiting, security headers
 - **Easy Deployment**: Automated scripts for quick setup
 - **No Docker Required**: Native installation on Ubuntu/Debian
+- **Dynamic Domain Configuration**: Works with any domain you own
 
 ## 📋 Prerequisites
 
 - Ubuntu 20.04+ or Debian 11+ server
 - Root access
 - Domain with the following subdomains configured:
-  - `app.sfproject.net` - Web frontend
-  - `bsky.sfproject.net` - AppView API
-  - `pdsapi.sfproject.net` - Personal Data Server
-  - `ozone.sfproject.net` - Moderation interface
-  - `plc.sfproject.net` - DID resolution
-  - `bsync.sfproject.net` - Background sync
-  - `introspect.sfproject.net` - API introspection
-  - `chat.sfproject.net` - Chat service
+  - `app.yourdomain.com` - Web frontend
+  - `bsky.yourdomain.com` - AppView API
+  - `pdsapi.yourdomain.com` - Personal Data Server
+  - `ozone.yourdomain.com` - Moderation interface
+  - `plc.yourdomain.com` - DID resolution
+  - `bsync.yourdomain.com` - Background sync
+  - `introspect.yourdomain.com` - API documentation
+  - `chat.yourdomain.com` - Chat service
 
 ## 🚀 Quick Start
 
@@ -41,6 +42,8 @@ chmod +x scripts/*.sh
 sudo ./scripts/quick-start.sh
 ```
 
+The script will prompt you for your domain and handle the entire setup process.
+
 ### Option 2: Manual Setup
 
 Follow the detailed step-by-step guide in [DEPLOYMENT-GUIDE.md](./DEPLOYMENT-GUIDE.md)
@@ -54,10 +57,11 @@ Bsky-app/
 │   ├── install-dependencies.sh # System dependencies
 │   ├── generate-keys.sh        # Cryptographic key generation
 │   ├── setup-systemd.sh        # Systemd service configuration
-│   └── setup-nginx.sh          # Nginx configuration
-├── docker-compose.yml          # Docker setup (alternative)
-├── nginx.conf                  # Nginx configuration
-├── env.example                 # Environment variables template
+│   ├── setup-nginx.sh          # Nginx configuration
+│   ├── seed-database.sh        # Database seeding
+│   ├── create-users.sh         # User creation
+│   ├── backup-database.sh      # Database backup
+│   └── health-check.sh         # Health monitoring
 ├── DEPLOYMENT-GUIDE.md         # Detailed manual setup guide
 └── README.md                   # This file
 ```
@@ -66,14 +70,14 @@ Bsky-app/
 
 | Service | Subdomain | Port | Description |
 |---------|-----------|------|-------------|
-| **Web Frontend** | `app.sfproject.net` | 8100 | Bluesky web application |
-| **AppView** | `bsky.sfproject.net` | 3000 | Main API for client interactions |
-| **PDS** | `pdsapi.sfproject.net` | 2583 | Personal Data Server |
-| **Ozone** | `ozone.sfproject.net` | 3001 | Moderation interface |
-| **Bsync** | `bsync.sfproject.net` | 3002 | Background synchronization |
-| **Introspect** | `introspect.sfproject.net` | 3003 | API documentation |
-| **Chat** | `chat.sfproject.net` | 3004 | Chat service |
-| **PLC** | `plc.sfproject.net` | 3005 | DID resolution |
+| **Web Frontend** | `app.yourdomain.com` | 8100 | Bluesky web application |
+| **AppView** | `bsky.yourdomain.com` | 3000 | Main API for client interactions |
+| **PDS** | `pdsapi.yourdomain.com` | 2583 | Personal Data Server |
+| **Ozone** | `ozone.yourdomain.com` | 3001 | Moderation interface |
+| **Bsync** | `bsync.yourdomain.com` | 3002 | Background synchronization |
+| **Introspect** | `introspect.yourdomain.com` | 3003 | API documentation |
+| **Chat** | `chat.yourdomain.com` | 3004 | Chat service |
+| **PLC** | `plc.yourdomain.com` | 3005 | DID resolution |
 
 ## 🔐 Security Features
 
@@ -123,10 +127,20 @@ sudo systemctl restart bluesky-web
 
 ```bash
 # Backup database
-pg_dump -U bluesky bluesky > backup_$(date +%Y%m%d_%H%M%S).sql
+./scripts/backup-database.sh
 
-# Restore database
-psql -U bluesky bluesky < backup_file.sql
+# Seed database with initial data
+sudo ./scripts/seed-database.sh
+
+# Create users
+./scripts/create-users.sh
+```
+
+### Health Monitoring
+
+```bash
+# Run comprehensive health check
+./scripts/health-check.sh
 ```
 
 ### SSL Certificate Management
@@ -169,9 +183,9 @@ sudo certbot certificates
 
 ```bash
 # Test API endpoints
-curl https://bsky.sfproject.net/xrpc/com.atproto.server.describeServer
-curl https://pdsapi.sfproject.net/xrpc/com.atproto.server.describeServer
-curl https://ozone.sfproject.net/health
+curl https://bsky.yourdomain.com/xrpc/com.atproto.server.describeServer
+curl https://pdsapi.yourdomain.com/xrpc/com.atproto.server.describeServer
+curl https://ozone.yourdomain.com/health
 ```
 
 ## 📚 Documentation

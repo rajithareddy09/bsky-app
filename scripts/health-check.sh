@@ -19,6 +19,15 @@ else
     exit 1
 fi
 
+# Get domain from environment or prompt user
+DOMAIN="${PDS_HOSTNAME:-}"
+if [ -z "$DOMAIN" ]; then
+    read -p "Enter your domain (e.g., yourdomain.com): " DOMAIN
+fi
+
+# Remove any protocol prefixes
+DOMAIN=$(echo "$DOMAIN" | sed 's|^https?://||' | sed 's|^pdsapi\.||')
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -172,11 +181,11 @@ check_memory() {
 # Function to check SSL certificates
 check_ssl_certificates() {
     local domains=(
-        "app.sfproject.net"
-        "bsky.sfproject.net"
-        "pdsapi.sfproject.net"
-        "ozone.sfproject.net"
-        "bsync.sfproject.net"
+        "app.$DOMAIN"
+        "bsky.$DOMAIN"
+        "pdsapi.$DOMAIN"
+        "ozone.$DOMAIN"
+        "bsync.$DOMAIN"
     )
     
     echo ""
@@ -293,16 +302,16 @@ echo "🌐 HTTP Endpoint Health:"
 echo "========================"
 
 ((total_checks++))
-if check_http_endpoint "https://app.sfproject.net" "Web App"; then ((passed_checks++)); fi
+if check_http_endpoint "https://app.$DOMAIN" "Web App"; then ((passed_checks++)); fi
 
 ((total_checks++))
-if check_http_endpoint "https://bsky.sfproject.net/xrpc/com.atproto.server.describeServer" "AppView API"; then ((passed_checks++)); fi
+if check_http_endpoint "https://bsky.$DOMAIN/xrpc/com.atproto.server.describeServer" "AppView API"; then ((passed_checks++)); fi
 
 ((total_checks++))
-if check_http_endpoint "https://pdsapi.sfproject.net/xrpc/com.atproto.server.describeServer" "PDS API"; then ((passed_checks++)); fi
+if check_http_endpoint "https://pdsapi.$DOMAIN/xrpc/com.atproto.server.describeServer" "PDS API"; then ((passed_checks++)); fi
 
 ((total_checks++))
-if check_http_endpoint "https://ozone.sfproject.net/health" "Ozone API"; then ((passed_checks++)); fi
+if check_http_endpoint "https://ozone.$DOMAIN/health" "Ozone API"; then ((passed_checks++)); fi
 
 # SSL certificate checks
 check_ssl_certificates

@@ -31,6 +31,15 @@ DB_NAME="bluesky"
 DB_USER="bluesky"
 DB_PASSWORD="${POSTGRES_PASSWORD:-bluesky_password}"
 
+# Get domain from environment or prompt user
+DOMAIN="${PDS_HOSTNAME:-}"
+if [ -z "$DOMAIN" ]; then
+    read -p "Enter your domain (e.g., yourdomain.com): " DOMAIN
+fi
+
+# Remove any protocol prefixes
+DOMAIN=$(echo "$DOMAIN" | sed 's|^https?://||' | sed 's|^pdsapi\.||')
+
 # Function to run SQL commands
 run_sql() {
     PGPASSWORD="$DB_PASSWORD" psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" -c "$1"
@@ -60,17 +69,17 @@ echo "📝 Creating initial database schema and data..."
 
 # Create admin user
 echo "👤 Creating admin user..."
-if ! user_exists "admin.sfproject.net"; then
-    echo "Creating admin user: admin.sfproject.net"
+if ! user_exists "admin.$DOMAIN"; then
+    echo "Creating admin user: admin.$DOMAIN"
     # Note: In a real implementation, you would use the PDS API to create users
     # This is a simplified example - you'll need to use the actual PDS API
     echo "⚠️  Admin user creation requires PDS API. Use the following command:"
     echo ""
-    echo "curl -X POST https://pdsapi.sfproject.net/xrpc/com.atproto.server.createAccount \\"
+    echo "curl -X POST https://pdsapi.$DOMAIN/xrpc/com.atproto.server.createAccount \\"
     echo "  -H \"Content-Type: application/json\" \\"
     echo "  -d '{"
-    echo "    \"email\": \"admin@sfproject.net\","
-    echo "    \"handle\": \"admin.sfproject.net\","
+    echo "    \"email\": \"admin@$DOMAIN\","
+    echo "    \"handle\": \"admin.$DOMAIN\","
     echo "    \"password\": \"your_secure_password\""
     echo "  }'"
     echo ""
@@ -81,11 +90,11 @@ fi
 # Create test users
 echo "👥 Creating test users..."
 test_users=(
-    "test1.sfproject.net"
-    "test2.sfproject.net"
-    "demo.sfproject.net"
-    "user1.sfproject.net"
-    "user2.sfproject.net"
+    "test1.$DOMAIN"
+    "test2.$DOMAIN"
+    "demo.$DOMAIN"
+    "user1.$DOMAIN"
+    "user2.$DOMAIN"
 )
 
 for user in "${test_users[@]}"; do
@@ -93,10 +102,10 @@ for user in "${test_users[@]}"; do
         echo "Creating test user: $user"
         echo "⚠️  Test user creation requires PDS API. Use the following command:"
         echo ""
-        echo "curl -X POST https://pdsapi.sfproject.net/xrpc/com.atproto.server.createAccount \\"
+        echo "curl -X POST https://pdsapi.$DOMAIN/xrpc/com.atproto.server.createAccount \\"
         echo "  -H \"Content-Type: application/json\" \\"
         echo "  -d '{"
-        echo "    \"email\": \"$user@sfproject.net\","
+        echo "    \"email\": \"$user@$DOMAIN\","
         echo "    \"handle\": \"$user\","
         echo "    \"password\": \"testpassword123\""
         echo "  }'"
@@ -108,15 +117,15 @@ done
 
 # Create initial posts (if PDS is running)
 echo "📝 Creating initial posts..."
-if curl -s https://pdsapi.sfproject.net/xrpc/com.atproto.server.describeServer > /dev/null 2>&1; then
+if curl -s https://pdsapi.$DOMAIN/xrpc/com.atproto.server.describeServer > /dev/null 2>&1; then
     echo "✅ PDS is running - you can create posts via API"
     echo ""
     echo "Example post creation:"
-    echo "curl -X POST https://pdsapi.sfproject.net/xrpc/com.atproto.repo.createRecord \\"
+    echo "curl -X POST https://pdsapi.$DOMAIN/xrpc/com.atproto.repo.createRecord \\"
     echo "  -H \"Content-Type: application/json\" \\"
     echo "  -H \"Authorization: Bearer YOUR_SESSION_TOKEN\" \\"
     echo "  -d '{"
-    echo "    \"repo\": \"did:web:admin.sfproject.net\","
+    echo "    \"repo\": \"did:web:admin.$DOMAIN\","
     echo "    \"collection\": \"app.bsky.feed.post\","
     echo "    \"record\": {"
     echo "      \"text\": \"Welcome to our self-hosted Bluesky instance! 🌟\","
@@ -151,10 +160,10 @@ run_sql "CREATE TABLE IF NOT EXISTS instance_config (
 
 # Insert initial configuration
 run_sql "INSERT INTO instance_config (key, value) VALUES 
-    ('instance_name', 'SF Project Bluesky'),
-    ('instance_description', 'Self-hosted Bluesky instance'),
-    ('instance_url', 'https://app.sfproject.net'),
-    ('admin_email', 'admin@sfproject.net'),
+    ('instance_name', 'Your Bluesky Instance'),
+    ('instance_description', 'Self-hosted Bluesky instance on $DOMAIN'),
+    ('instance_url', 'https://app.$DOMAIN'),
+    ('admin_email', 'admin@$DOMAIN'),
     ('max_post_length', '300'),
     ('enable_registration', 'true'),
     ('require_invite', 'false'),
@@ -185,7 +194,7 @@ sample_posts=(
 )
 
 for post in "${sample_posts[@]}"; do
-    run_sql "INSERT INTO sample_posts (author_handle, content) VALUES ('admin.sfproject.net', '$post');" 2>/dev/null || echo "Sample post already exists"
+    run_sql "INSERT INTO sample_posts (author_handle, content) VALUES ('admin.$DOMAIN', '$post');" 2>/dev/null || echo "Sample post already exists"
 done
 
 # Create statistics table
@@ -226,21 +235,21 @@ echo "1. Start your PDS service:"
 echo "   sudo systemctl start bluesky-pds"
 echo ""
 echo "2. Create admin account using the PDS API:"
-echo "   curl -X POST https://pdsapi.sfproject.net/xrpc/com.atproto.server.createAccount \\"
+echo "   curl -X POST https://pdsapi.$DOMAIN/xrpc/com.atproto.server.createAccount \\"
 echo "     -H \"Content-Type: application/json\" \\"
 echo "     -d '{"
-echo "       \"email\": \"admin@sfproject.net\","
-echo "       \"handle\": \"admin.sfproject.net\","
+echo "       \"email\": \"admin@$DOMAIN\","
+echo "       \"handle\": \"admin.$DOMAIN\","
 echo "       \"password\": \"your_secure_password\""
 echo "     }'"
 echo ""
 echo "3. Create test users using the same API"
 echo ""
 echo "4. Access your instance at:"
-echo "   https://app.sfproject.net"
+echo "   https://app.$DOMAIN"
 echo ""
 echo "5. Access moderation interface at:"
-echo "   https://ozone.sfproject.net"
+echo "   https://ozone.$DOMAIN"
 echo ""
 echo "📊 Database Statistics:"
 echo "=================================="
