@@ -212,10 +212,10 @@ User=bluesky
 WorkingDirectory=/home/bluesky/social-app/bskyweb
 Environment=NODE_ENV=production
 Environment=PORT=8100
-Environment=ATP_APPVIEW_HOST=https://bsky.$DOMAIN
+Environment=ATP_APPVIEW_HOST=https://pdsapi.$DOMAIN
 Environment=ATP_PDS_HOST=https://pdsapi.$DOMAIN
 Environment=HTTP_ADDRESS=:8100
-ExecStart=/home/bluesky/social-app/bskyweb/bskyweb serve
+ExecStart=/home/bluesky/social-app/bskyweb/bskyweb serve --appview-host=https://pdsapi.$DOMAIN
 Restart=always
 RestartSec=10
 StandardOutput=journal

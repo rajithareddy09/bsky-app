@@ -78,10 +78,39 @@ if ! command -v go &> /dev/null; then
     export PATH=$PATH:/usr/local/go/bin
     echo 'export PATH=$PATH:/usr/local/go/bin' >> /root/.bashrc
 fi
-# Build the bskyweb binary
+
+# Ensure Go modules are properly set up
+echo "📦 Setting up Go modules..."
+go mod download
+go mod verify
+
+# Clean any existing binary
+rm -f bskyweb
+
+# Build the bskyweb binary with proper template embedding
+echo "🔨 Building bskyweb with embedded templates..."
 go build -o bskyweb ./cmd/bskyweb
+
+# Verify the binary was created
+if [ -f "bskyweb" ]; then
+    echo "✅ bskyweb Go server built successfully at $(pwd)/bskyweb"
+    echo "📏 Binary size: $(ls -lh bskyweb | awk '{print $5}')"
+    
+    # Test if the binary can run and has templates
+    echo "🧪 Testing binary..."
+    if timeout 5s ./bskyweb serve --help > /dev/null 2>&1; then
+        echo "✅ Binary is executable and responds to --help"
+    else
+        echo "❌ Binary failed to respond to --help"
+    fi
+else
+    echo "❌ Failed to build bskyweb binary"
+    exit 1
+fi
+
+# Ensure the binary is executable
 chmod +x bskyweb
-echo "✅ bskyweb Go server built successfully"
+
 cd ..
 
 # Step 5: Generate keys

@@ -196,6 +196,9 @@ BSKY_PORT=3000
 OZONE_PORT=3001
 BSYNC_PORT=3002
 WEB_PORT=8100
+WEB_ATP_APPVIEW_HOST=https://pdsapi.yourdomain.com
+WEB_ATP_PDS_HOST=https://pdsapi.yourdomain.com
+WEB_HTTP_ADDRESS=:8100
 
 # Data Directories
 PDS_DATA_DIRECTORY=/home/bluesky/data/pds
