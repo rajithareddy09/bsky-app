@@ -15,13 +15,6 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-# Load environment variables
-if [ -f .env ]; then
-    source .env
-else
-    echo "❌ .env file not found. Please run the key generation script first."
-    exit 1
-fi
 
 # Get domain from environment or prompt user
 DOMAIN="${PDS_HOSTNAME:-}"
@@ -35,7 +28,7 @@ DOMAIN=$(echo "$DOMAIN" | sed 's|^https?://||' | sed 's|^pdsapi\.||')
 # Database configuration
 DB_NAME="bluesky"
 DB_USER="bluesky"
-DB_PASSWORD="${POSTGRES_PASSWORD:-bluesky_password}"
+DB_PASSWORD="bluesky"
 
 echo "🌐 Using domain: $DOMAIN"
 echo "🗄️ Database: $DB_NAME"
@@ -53,36 +46,36 @@ echo "✅ Database setup complete"
 # Run PDS migrations
 echo "🔄 Running PDS database migrations..."
 cd /home/bluesky/atproto/services/pds
-sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 18 && npm run db:migrate' || {
+ bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 18 && npm run db:migrate' || {
     echo "⚠️ PDS migrations failed, trying alternative method..."
-    sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 18 && node --require ts-node/register ../../packages/pds/src/db/migrate.ts'
+     bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 18 && node --require ts-node/register ../../packages/pds/src/db/migrate.ts'
 }
 echo "✅ PDS migrations complete"
 
 # Run AppView migrations
 echo "🔄 Running AppView database migrations..."
 cd /home/bluesky/atproto/services/bsky
-sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 18 && npm run db:migrate' || {
+ bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 18 && npm run db:migrate' || {
     echo "⚠️ AppView migrations failed, trying alternative method..."
-    sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 18 && node --require ts-node/register ../../packages/bsky/src/db/migrate.ts'
+     bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 18 && node --require ts-node/register ../../packages/bsky/src/db/migrate.ts'
 }
 echo "✅ AppView migrations complete"
 
 # Run Ozone migrations
 echo "🔄 Running Ozone database migrations..."
 cd /home/bluesky/atproto/services/ozone
-sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 18 && npm run db:migrate' || {
+ bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 18 && npm run db:migrate' || {
     echo "⚠️ Ozone migrations failed, trying alternative method..."
-    sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 18 && node --require ts-node/register ../../packages/ozone/src/db/migrate.ts'
+     bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 18 && node --require ts-node/register ../../packages/ozone/src/db/migrate.ts'
 }
 echo "✅ Ozone migrations complete"
 
 # Run Bsync migrations
 echo "🔄 Running Bsync database migrations..."
 cd /home/bluesky/atproto/services/bsync
-sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 18 && npm run db:migrate' || {
+ bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 18 && npm run db:migrate' || {
     echo "⚠️ Bsync migrations failed, trying alternative method..."
-    sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 18 && node --require ts-node/register ../../packages/bsync/src/db/migrate.ts'
+     bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 18 && node --require ts-node/register ../../packages/bsync/src/db/migrate.ts'
 }
 echo "✅ Bsync migrations complete"
 
