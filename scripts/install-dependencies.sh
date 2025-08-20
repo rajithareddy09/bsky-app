@@ -33,6 +33,18 @@ apt update && apt upgrade -y
 echo "📦 Installing basic utilities..."
 apt install -y curl wget git build-essential python3 python3-pip software-properties-common
 
+# Install Go for bskyweb server
+echo "📦 Installing Go..."
+if ! command -v go &> /dev/null; then
+    wget https://go.dev/dl/go1.21.0.linux-amd64.tar.gz
+    tar -C /usr/local -xzf go1.21.0.linux-amd64.tar.gz
+    export PATH=$PATH:/usr/local/go/bin
+    echo 'export PATH=$PATH:/usr/local/go/bin' >> /root/.bashrc
+    echo "✅ Go installed successfully"
+else
+    echo "✅ Go already installed: $(go version)"
+fi
+
 # Install nvm for Node.js version management
 echo "📦 Installing nvm (Node Version Manager)..."
 # Install nvm for the bluesky user

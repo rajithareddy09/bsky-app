@@ -64,8 +64,25 @@ cd social-app
 # Set CI environment to skip husky git hooks
 sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 20 && CI=true yarn install'
 sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 20 && CI=true yarn build-web'
-cd ..
 echo "✅ social-app built successfully"
+
+# Step 4.5: Build Go-based bskyweb server
+echo ""
+echo "🔨 Step 4.5: Building Go-based bskyweb server..."
+cd bskyweb
+# Install Go if not present
+if ! command -v go &> /dev/null; then
+    echo "📦 Installing Go..."
+    wget https://go.dev/dl/go1.21.0.linux-amd64.tar.gz
+    tar -C /usr/local -xzf go1.21.0.linux-amd64.tar.gz
+    export PATH=$PATH:/usr/local/go/bin
+    echo 'export PATH=$PATH:/usr/local/go/bin' >> /root/.bashrc
+fi
+# Build the bskyweb binary
+go build -o bskyweb ./cmd/bskyweb
+chmod +x bskyweb
+echo "✅ bskyweb Go server built successfully"
+cd ..
 
 # Step 5: Generate keys
 echo ""

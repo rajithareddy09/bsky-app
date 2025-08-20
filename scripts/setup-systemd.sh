@@ -198,7 +198,7 @@ SyslogIdentifier=bluesky-bsync
 WantedBy=multi-user.target
 EOF
 
-# Create Web Frontend service (using Node.js 20)
+# Create Web Frontend service (using Go bskyweb server)
 echo "📝 Creating Web Frontend service..."
 cat > /etc/systemd/system/bluesky-web.service << EOF
 [Unit]
@@ -209,14 +209,13 @@ Wants=network.target
 [Service]
 Type=simple
 User=bluesky
-WorkingDirectory=/home/bluesky/social-app
+WorkingDirectory=/home/bluesky/social-app/bskyweb
 Environment=NODE_ENV=production
-Environment=CI=true
 Environment=PORT=8100
-Environment=BSKY_SERVICE_URL=https://bsky.$DOMAIN
-Environment=BSKY_PDS_URL=https://pdsapi.$DOMAIN
-Environment=BSKY_OAUTH_REDIRECT_URL=https://app.$DOMAIN
-ExecStart=/bin/bash -c 'source /home/bluesky/.bashrc && nvm use 20 && yarn start-web'
+Environment=ATP_APPVIEW_HOST=https://bsky.$DOMAIN
+Environment=ATP_PDS_HOST=https://pdsapi.$DOMAIN
+Environment=HTTP_ADDRESS=:8100
+ExecStart=/home/bluesky/social-app/bskyweb/bskyweb serve
 Restart=always
 RestartSec=10
 StandardOutput=journal
