@@ -1,9 +1,10 @@
 #!/bin/bash
 
 # =============================================================================
-# Bluesky Database Setup and Migration Script
+# Bluesky Database Setup Script
 # =============================================================================
-# This script sets up the PostgreSQL database and runs migrations for all services
+# This script sets up the PostgreSQL database and user
+# The services will handle their own migrations on startup
 
 set -e
 
@@ -14,7 +15,6 @@ if [ "$EUID" -ne 0 ]; then
     echo "❌ This script must be run as root (use sudo)"
     exit 1
 fi
-
 
 # Get domain from environment or prompt user
 DOMAIN="${PDS_HOSTNAME:-}"
@@ -41,61 +41,34 @@ sudo -u postgres psql -c "CREATE USER $DB_USER WITH ENCRYPTED PASSWORD '$DB_PASS
 sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $DB_USER;" 2>/dev/null || echo "Privileges already granted"
 sudo -u postgres psql -c "ALTER USER $DB_USER CREATEDB;" 2>/dev/null || echo "User already has CREATEDB privilege"
 
+# Grant additional permissions needed for migrations
+sudo -u postgres psql -c "GRANT CREATE ON SCHEMA public TO $DB_USER;" 2>/dev/null || echo "Schema permissions already granted"
+sudo -u postgres psql -c "GRANT USAGE ON SCHEMA public TO $DB_USER;" 2>/dev/null || echo "Schema usage permissions already granted"
+
 echo "✅ Database setup complete"
 
-# Run PDS migrations
-echo "🔄 Running PDS database migrations..."
-cd /home/bluesky/atproto/services/pds
- bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 18 && npm run db:migrate' || {
-    echo "⚠️ PDS migrations failed, trying alternative method..."
-     bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 18 && node --require ts-node/register ../../packages/pds/src/db/migrate.ts'
-}
-echo "✅ PDS migrations complete"
-
-# Run AppView migrations
-echo "🔄 Running AppView database migrations..."
-cd /home/bluesky/atproto/services/bsky
- bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 18 && npm run db:migrate' || {
-    echo "⚠️ AppView migrations failed, trying alternative method..."
-     bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 18 && node --require ts-node/register ../../packages/bsky/src/db/migrate.ts'
-}
-echo "✅ AppView migrations complete"
-
-# Run Ozone migrations
-echo "🔄 Running Ozone database migrations..."
-cd /home/bluesky/atproto/services/ozone
- bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 18 && npm run db:migrate' || {
-    echo "⚠️ Ozone migrations failed, trying alternative method..."
-     bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 18 && node --require ts-node/register ../../packages/ozone/src/db/migrate.ts'
-}
-echo "✅ Ozone migrations complete"
-
-# Run Bsync migrations
-echo "🔄 Running Bsync database migrations..."
-cd /home/bluesky/atproto/services/bsync
- bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 18 && npm run db:migrate' || {
-    echo "⚠️ Bsync migrations failed, trying alternative method..."
-     bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 18 && node --require ts-node/register ../../packages/bsync/src/db/migrate.ts'
-}
-echo "✅ Bsync migrations complete"
-
-# Verify database tables
-echo "🔍 Verifying database tables..."
-cd /home/bluesky
-sudo -u postgres psql -d bluesky -c "\dt" | grep -E "(signing_key|label|moderation_event|repo_push_event)" || echo "⚠️ Some expected tables not found"
-
 echo ""
-echo "🎉 Database setup and migrations complete!"
+echo "📋 Important Notes:"
+echo "=================================="
+echo "• Database and user created successfully"
+echo "• The services will automatically run their migrations on first startup"
+echo "• No manual migration commands needed"
 echo ""
-echo "📋 Next steps:"
-echo "1. Restart all services:"
-echo "   sudo systemctl restart bluesky-pds"
-echo "   sudo systemctl restart bluesky-appview"
-echo "   sudo systemctl restart bluesky-ozone"
-echo "   sudo systemctl restart bluesky-bsync"
+echo "🚀 Next steps:"
+echo "1. Start the services in this order:"
+echo "   sudo systemctl start bluesky-pds"
+echo "   sudo systemctl start bluesky-appview"
+echo "   sudo systemctl start bluesky-ozone"
+echo "   sudo systemctl start bluesky-bsync"
 echo ""
 echo "2. Check service status:"
 echo "   sudo systemctl status bluesky-*"
 echo ""
-echo "3. View logs if any issues:"
-echo "   sudo journalctl -u bluesky-* -f"
+echo "3. View logs to see migration progress:"
+echo "   sudo journalctl -u bluesky-pds -f"
+echo "   sudo journalctl -u bluesky-appview -f"
+echo "   sudo journalctl -u bluesky-ozone -f"
+echo "   sudo journalctl -u bluesky-bsync -f"
+echo ""
+echo "⚠️  Note: First startup may take longer as services create their tables"
+echo "   This is normal and expected behavior"
