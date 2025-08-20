@@ -40,7 +40,7 @@ sudo -u root bash -c 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.3
 
 # Add nvm to bash profile for bluesky user
 echo "📝 Configuring nvm for bluesky user..."
-cat >> /home/bluesky/.bashrc << 'EOF'
+cat >> /root/.bashrc << 'EOF'
 
 # NVM Configuration
 export NVM_DIR="$HOME/.nvm"
