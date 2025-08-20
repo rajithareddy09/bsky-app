@@ -110,10 +110,10 @@ ufw allow 443/tcp
 ufw reload
 
 # Create PostgreSQL database and user
-echo "🗄️ Setting up PostgreSQL database..."
-sudo -u postgres psql -c "CREATE DATABASE bluesky;"
-sudo -u postgres psql -c "CREATE USER bluesky WITH ENCRYPTED PASSWORD 'bluesky_password';"
-sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE bluesky TO bluesky;"
+#echo "🗄️ Setting up PostgreSQL database..."
+#sudo -u postgres psql -c "CREATE DATABASE bluesky;"
+#sudo -u postgres psql -c "CREATE USER bluesky WITH ENCRYPTED PASSWORD 'bluesky_password';"
+#sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE bluesky TO bluesky;"
 
 # Verify installations
 echo "✅ Verifying installations..."
