@@ -116,10 +116,8 @@ echo "✅ PDS is running"
 mkdir -p tokens
 
 # Get domain from environment or prompt user
-DOMAIN="${PDS_HOSTNAME:-}"
-if [ -z "$DOMAIN" ]; then
-    read -p "Enter your domain (e.g., yourdomain.com): " DOMAIN
-fi
+DOMAIN=pdsapi.sfproject.net
+
 
 # Remove any protocol prefixes
 DOMAIN=$(echo "$DOMAIN" | sed 's|^https?://||' | sed 's|^pdsapi\.||')
