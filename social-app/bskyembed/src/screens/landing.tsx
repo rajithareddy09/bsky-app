@@ -29,7 +29,7 @@ if (!root) throw new Error('No root element')
 initSystemColorMode()
 
 const agent = new AtpAgent({
-  service: 'https://bsky.sfproject.net',
+  service: 'https://sfproject.net',
 })
 
 render(<LandingPage />, root)

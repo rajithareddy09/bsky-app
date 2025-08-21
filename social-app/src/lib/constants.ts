@@ -5,7 +5,7 @@ export const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
 export const STAGING_SERVICE = 'https://staging.bsky.dev'
 export const BSKY_SERVICE = 'https://app.sfproject.net'
-export const BSKY_SERVICE_DID = 'did:web:bsky.sfproject.net'
+export const BSKY_SERVICE_DID = 'did:web:sfproject.net'
 export const PUBLIC_BSKY_SERVICE = 'https://bsky.sfproject.net'
 export const DEFAULT_SERVICE = BSKY_SERVICE
 const HELP_DESK_LANG = 'en-us'
@@ -208,7 +208,7 @@ export const urls = {
 }
 
 export const PUBLIC_APPVIEW = 'https://bsky.sfproject.net'
-export const PUBLIC_APPVIEW_DID = 'did:web:bsky.sfproject.net'
+export const PUBLIC_APPVIEW_DID = 'did:web:sfproject.net'
 export const PUBLIC_STAGING_APPVIEW_DID = 'did:web:api.staging.bsky.dev'
 
 export const DEV_ENV_APPVIEW = `http://localhost:2584` // always the same
