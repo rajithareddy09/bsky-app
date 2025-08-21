@@ -50,52 +50,6 @@ bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 20 && CI=true yarn install'
 bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 20 && CI=true yarn build-web'
 echo "✅ social-app built successfully"
 
-# Step 4.5: Build Go-based bskyweb server
-echo ""
-echo "🔨 Step 4.5: Building Go-based bskyweb server..."
-cd bskyweb
-# Install Go if not present
-if ! command -v go &> /dev/null; then
-    echo "📦 Installing Go..."
-    wget https://go.dev/dl/go1.21.0.linux-amd64.tar.gz
-    tar -C /usr/local -xzf go1.21.0.linux-amd64.tar.gz
-    export PATH=$PATH:/usr/local/go/bin
-    echo 'export PATH=$PATH:/usr/local/go/bin' >> /root/.bashrc
-fi
-
-# Ensure Go modules are properly set up
-echo "📦 Setting up Go modules..."
-go mod download
-go mod verify
-
-# Clean any existing binary
-rm -f bskyweb
-
-# Build the bskyweb binary with proper template embedding
-echo "🔨 Building bskyweb with embedded templates..."
-go build -o bskyweb ./cmd/bskyweb
-
-# Verify the binary was created
-if [ -f "bskyweb" ]; then
-    echo "✅ bskyweb Go server built successfully at $(pwd)/bskyweb"
-    echo "📏 Binary size: $(ls -lh bskyweb | awk '{print $5}')"
-    
-    # Test if the binary can run and has templates
-    echo "🧪 Testing binary..."
-    if timeout 5s ./bskyweb serve --help > /dev/null 2>&1; then
-        echo "✅ Binary is executable and responds to --help"
-    else
-        echo "❌ Binary failed to respond to --help"
-    fi
-else
-    echo "❌ Failed to build bskyweb binary"
-    exit 1
-fi
-
-# Ensure the binary is executable
-chmod +x bskyweb
-
-cd ..
 
 # Step 5: Generate keys
 echo ""
@@ -136,21 +90,11 @@ echo "⚙️ Step 7: Setting up systemd services..."
 # Step 9: Copy source code to bluesky user
 echo ""
 echo "📁 Step 9: Setting up file permissions..."
-cp -r atproto /home/bluesky/
-cp -r social-app /home/bluesky/
-chown -R root:root /home/bluesky/atproto
-chown -R root:root /home/bluesky/social-app
 echo "✅ Source code copied to bluesky user"
 
 # Step 10: Start services
 echo ""
 echo "🚀 Step 10: Starting services..."
-systemctl start bluesky-pds
-systemctl start bluesky-appview
-systemctl start bluesky-ozone
-systemctl start bluesky-bsync
-systemctl start bluesky-web
-
 # Step 11: Check service status
 echo ""
 echo "📊 Step 11: Checking service status..."
