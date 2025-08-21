@@ -62,14 +62,14 @@ EOF
 
 # Install Node.js versions for different components
 echo "📦 Installing Node.js versions..."
-sudo -u root bash -c 'source ~/.bashrc && nvm install 18'
-sudo -u root bash -c 'source ~/.bashrc && nvm install 20'
-sudo -u root bash -c 'source ~/.bashrc && nvm alias default 18'
+sudo -u root bash -c 'source $HOME/.nvm/nvm.sh  && nvm install 18'
+sudo -u root bash -c 'source $HOME/.nvm/nvm.sh  && nvm install 20'
+sudo -u root bash -c 'source $HOME/.nvm/nvm.sh  && nvm alias default 18'
 
 # Install pnpm globally for both Node.js versions
 echo "📦 Installing pnpm..."
-sudo -u root bash -c 'source ~/.bashrc && nvm use 18 && npm install -g pnpm'
-sudo -u root bash -c 'source ~/.bashrc && nvm use 20 && npm install -g pnpm'
+sudo -u root bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 18 && npm install -g pnpm'
+sudo -u root bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 20 && npm install -g pnpm'
 
 # Install PostgreSQL
 echo "📦 Installing PostgreSQL..."
@@ -130,10 +130,10 @@ echo "🗄️ Setting up PostgreSQL database..."
 # Verify installations
 echo "✅ Verifying installations..."
 echo "nvm installed for bluesky user"
-echo "Node.js 18: $(sudo -u root bash -c 'source ~/.bashrc && nvm use 18 && node --version')"
-echo "Node.js 20: $(sudo -u root bash -c 'source ~/.bashrc && nvm use 20 && node --version')"
-echo "pnpm (Node 18): $(sudo -u root bash -c 'source ~/.bashrc && nvm use 18 && pnpm --version')"
-echo "pnpm (Node 20): $(sudo -u root bash -c 'source ~/.bashrc && nvm use 20 && pnpm --version')"
+echo "Node.js 18: $(sudo -u root bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 18 && node --version')"
+echo "Node.js 20: $(sudo -u root bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 20 && node --version')"
+echo "pnpm (Node 18): $(sudo -u root bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 18 && pnpm --version')"
+echo "pnpm (Node 20): $(sudo -u root bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 20 && pnpm --version')"
 echo "PostgreSQL version: $(psql --version)"
 echo "Redis version: $(redis-server --version | head -1)"
 echo "Nginx version: $(nginx -v 2>&1)"
