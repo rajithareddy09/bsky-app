@@ -136,15 +136,29 @@ echo "⚙️ Step 7: Setting up systemd services..."
 # Step 9: Copy source code to bluesky user
 echo ""
 echo "📁 Step 9: Setting up file permissions..."
+cp -r atproto /home/bluesky/
+cp -r social-app /home/bluesky/
+chown -R root:root /home/bluesky/atproto
+chown -R root:root /home/bluesky/social-app
+echo "✅ Source code copied to bluesky user"
 
 # Step 10: Start services
 echo ""
 echo "🚀 Step 10: Starting services..."
+systemctl start bluesky-pds
+systemctl start bluesky-appview
+systemctl start bluesky-ozone
+systemctl start bluesky-bsync
+systemctl start bluesky-web
 
 # Step 11: Check service status
 echo ""
 echo "📊 Step 11: Checking service status..."
-
+echo "PDS Service: $(systemctl is-active bluesky-pds)"
+echo "AppView Service: $(systemctl is-active bluesky-appview)"
+echo "Ozone Service: $(systemctl is-active bluesky-ozone)"
+echo "Bsync Service: $(systemctl is-active bluesky-bsync)"
+echo "Web Service: $(systemctl is-active bluesky-web)"
 
 echo ""
 echo "3. Create your first admin account:"

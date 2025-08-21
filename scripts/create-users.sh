@@ -19,7 +19,7 @@ else
 fi
 
 # PDS API endpoint
-PDS_URL="${PDS_PUBLIC_URL:-https://pdsapi.yourdomain.com}"
+PDS_URL=https://pdsapi.sfproject.net
 
 # Function to check if PDS is running
 check_pds() {
