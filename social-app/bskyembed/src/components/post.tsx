@@ -135,8 +135,8 @@ function PostContent({record}: {record: AppBskyFeedPost.Record | null}) {
           href={segment.link.uri}
           className="text-blue-400 hover:underline"
           disableTracking={
-            !segment.link.uri.startsWith('https://bsky.app') &&
-            !segment.link.uri.startsWith('https://go.bsky.app')
+            !segment.link.uri.startsWith('https://app.sfproject.net') &&
+!segment.link.uri.startsWith('https://go.app.sfproject.net')
           }>
           {segment.text}
         </Link>,

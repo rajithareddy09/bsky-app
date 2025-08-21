@@ -18,10 +18,10 @@ module.exports = function (_config) {
   const IS_DEV = !IS_TESTFLIGHT || !IS_PRODUCTION
 
   const ASSOCIATED_DOMAINS = [
-    'applinks:bsky.app',
-    'applinks:staging.bsky.app',
-    'appclips:bsky.app',
-    'appclips:go.bsky.app', // Allows App Clip to work when scanning QR codes
+    'applinks:app.sfproject.net',
+'applinks:staging.app.sfproject.net',
+'appclips:app.sfproject.net',
+'appclips:go.app.sfproject.net', // Allows App Clip to work when scanning QR codes
     // When testing local services, enter an ngrok (et al) domain here. It must use a standard HTTP/HTTPS port.
     ...(IS_DEV || IS_TESTFLIGHT ? [] : []),
   ]
@@ -157,7 +157,7 @@ module.exports = function (_config) {
             data: [
               {
                 scheme: 'https',
-                host: 'bsky.app',
+                host: 'app.sfproject.net',
               },
               IS_DEV && {
                 scheme: 'http',
@@ -172,7 +172,7 @@ module.exports = function (_config) {
         favicon: './assets/favicon.png',
       },
       updates: {
-        url: 'https://updates.bsky.app/manifest',
+        url: 'https://updates.app.sfproject.net/manifest',
         enabled: UPDATES_ENABLED,
         fallbackToCacheTimeout: 30000,
         codeSigningCertificate: UPDATES_ENABLED

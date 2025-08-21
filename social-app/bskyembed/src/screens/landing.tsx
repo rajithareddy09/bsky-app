@@ -16,11 +16,11 @@ import {Link} from '../components/link'
 import {Post} from '../components/post'
 import {niceDate} from '../utils'
 
-const DEFAULT_POST = 'https://bsky.app/profile/emilyliu.me/post/3jzn6g7ixgq2y'
+const DEFAULT_POST = 'https://app.sfproject.net/profile/emilyliu.me/post/3jzn6g7ixgq2y'
 const DEFAULT_URI =
   'at://did:plc:vjug55kidv6sye7ykr5faxxn/app.bsky.feed.post/3jzn6g7ixgq2y'
 
-export const EMBED_SERVICE = 'https://embed.bsky.app'
+export const EMBED_SERVICE = 'https://embed.app.sfproject.net'
 export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
 
 const root = document.getElementById('app')
@@ -57,7 +57,7 @@ function LandingPage() {
           } else {
             try {
               const urlp = new URL(uri)
-              if (!urlp.hostname.endsWith('bsky.app')) {
+              if (!urlp.hostname.endsWith('app.sfproject.net')) {
                 throw new Error('Invalid hostname')
               }
               const split = urlp.pathname.slice(1).split('/')
@@ -118,7 +118,7 @@ function LandingPage() {
   return (
     <main className="w-full min-h-screen flex flex-col items-center gap-8 py-14 px-4 md:pt-32 dark:bg-dimmedBgDarken dark:text-slate-200">
       <Link
-        href="https://bsky.social/about"
+        href="https://app.sfproject.net/about"
         className="transition-transform hover:scale-110">
         <img src={logo} className="h-10" />
       </Link>
@@ -286,7 +286,7 @@ function Snippet({
 }
 
 function toShareUrl(path: string) {
-  return `https://bsky.app${path}?ref_src=embed`
+  return `https://app.sfproject.net${path}?ref_src=embed`
 }
 
 /**
