@@ -101,7 +101,7 @@ cd ..
 echo ""
 echo "🔑 Step 5: Generating cryptographic keys..."
 #./scripts/generate-keys.sh
-
+cd ..
 # Step 6: Configure environment
 echo ""
 echo "⚙️ Step 6: Configuring environment..."
