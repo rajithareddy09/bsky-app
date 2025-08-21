@@ -29,7 +29,7 @@ echo ""
 
 # Step 1: Install dependencies
 echo "📦 Step 1: Installing system dependencies..."
-./scripts/install-dependencies.sh
+#./scripts/install-dependencies.sh
 
 
 # Step 3: Build atproto (using Node.js 18)
