@@ -106,7 +106,7 @@ echo "🔑 Step 5: Generating cryptographic keys..."
 echo ""
 echo "⚙️ Step 6: Configuring environment..."
 if [ ! -f ".env" ]; then
-    cp env.example .env
+    cp .env.example .env
     echo "✅ Environment file created from template"
 else
     echo "✅ Environment file already exists"
