@@ -83,6 +83,8 @@ Environment=PDS_BSKY_APP_VIEW_URL=https://bsky.$DOMAIN
 Environment=PDS_BSKY_APP_VIEW_DID=did:web:bsky.$DOMAIN
 Environment=PDS_OAUTH_PROVIDER_NAME=Your Bluesky Instance
 Environment=PDS_OAUTH_PROVIDER_PRIMARY_COLOR=#0085ff
+Environment=PDS_INVITE_REQUIRED=false
+Environment=PDS_SERVICE_HANDLE_DOMAINS=sfproject.net
 Environment=LOG_LEVEL=info
 ExecStart=/bin/bash -c 'source /home/bluesky/.bashrc && nvm use 18 && node --enable-source-maps index.js'
 Restart=always
@@ -121,6 +123,11 @@ Environment=BSKY_COURIER_URL=https://chat.$DOMAIN
 Environment=BSKY_COURIER_API_KEY=\${BSKY_COURIER_API_KEY}
 Environment=BSKY_BSYNC_URL=https://bsync.$DOMAIN
 Environment=BSKY_BSYNC_API_KEY=\${BSKY_BSYNC_API_KEY}
+Environment=MOD_SERVICE_DID=did:web:ozone.$DOMAIN
+Environment=BSKY_BLOB_CACHE_LOC=/home/bluesky/data/cache
+Environment=BSKY_DISABLE_SSRF_PROTECTION=false
+Environment=BSKY_PROXY_ALLOW_HTTP2=true
+Environment=BSKY_LABELS_FROM_ISSUER_DIDS=did:web:ozone.sfproject.net
 Environment=LOG_LEVEL=info
 ExecStart=/bin/bash -c 'source /home/bluesky/.bashrc && nvm use 18 && node --enable-source-maps api.js'
 Restart=always

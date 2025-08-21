@@ -29,9 +29,9 @@ export const readEnv = (): Environment => {
 
 export const envToCfg = (env: Environment): Config => {
   const serviceCfg: ServiceConfig = {
-    port: env.port ?? 3000,
+    port: env.port ?? 2584,
     version: env.version,
-    appviewUrl: env.appviewUrl ?? 'https://api.bsky.app',
+    appviewUrl: env.appviewUrl ?? 'https://bsky.sfproject.net',
     originVerify: env.originVerify,
   }
   return {

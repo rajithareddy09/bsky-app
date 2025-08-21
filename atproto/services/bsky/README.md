@@ -2,7 +2,7 @@
 
 This is the service entrypoint for the bsky appview. The entrypoint command should run `api.js` with node, e.g. `node api.js`. The following env vars are supported:
 
-- `BSKY_PUBLIC_URL` - (required) the public url of the appview, e.g. `https://api.bsky.app`.
+- `BSKY_PUBLIC_URL` - (required) the public url of the appview, e.g. `https://bsky.sfproject.net`.
 - `BSKY_DID_PLC_URL` - (required) the url of the PLC service used for looking up did documents, e.g. `https://plc.directory`.
 - `BSKY_DATAPLANE_URL` - (required) the url where the backing dataplane service lives.
 - `BSKY_SERVICE_SIGNING_KEY` - (required) the public signing key in the form of a `did:key`, used for service-to-service auth. Advertised in the appview's `did:web` document.
