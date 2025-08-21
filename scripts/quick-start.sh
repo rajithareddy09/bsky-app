@@ -31,29 +31,13 @@ echo ""
 echo "📦 Step 1: Installing system dependencies..."
 ./scripts/install-dependencies.sh
 
-# Step 2: Clone repositories
-echo ""
-echo "📥 Step 2: Cloning repositories..."
-if [ ! -d "atproto" ]; then
-    git clone https://github.com/bluesky-social/atproto.git
-    echo "✅ atproto repository cloned"
-else
-    echo "✅ atproto repository already exists"
-fi
-
-if [ ! -d "social-app" ]; then
-    git clone https://github.com/bluesky-social/social-app.git
-    echo "✅ social-app repository cloned"
-else
-    echo "✅ social-app repository already exists"
-fi
 
 # Step 3: Build atproto (using Node.js 18)
 echo ""
 echo "🔨 Step 3: Building atproto (Node.js 18)..."
 cd atproto
-sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 18 && pnpm install'
-sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 18 && pnpm build'
+bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 18 && pnpm install'
+bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 18 && pnpm build'
 cd ..
 echo "✅ atproto built successfully"
 
@@ -62,8 +46,8 @@ echo ""
 echo "🔨 Step 4: Building social-app (Node.js 20)..."
 cd social-app
 # Set CI environment to skip husky git hooks
-sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 20 && CI=true yarn install'
-sudo -u bluesky bash -c 'source ~/.bashrc && nvm use 20 && CI=true yarn build-web'
+bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 20 && CI=true yarn install'
+bash -c 'source $HOME/.nvm/nvm.sh  && nvm use 20 && CI=true yarn build-web'
 echo "✅ social-app built successfully"
 
 # Step 4.5: Build Go-based bskyweb server
@@ -146,7 +130,7 @@ read -p "Press Enter after you've configured the .env file..."
 # Step 7: Set up systemd services
 echo ""
 echo "⚙️ Step 7: Setting up systemd services..."
-./scripts/setup-systemd.sh
+#./scripts/setup-systemd.sh
 
 
 # Step 9: Copy source code to bluesky user
