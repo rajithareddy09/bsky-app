@@ -19,7 +19,7 @@ else
 fi
 
 # PDS API endpoint
-PDS_URL=https://pdsapi.sfproject.net
+PDS_URL="${PDS_PUBLIC_URL:-https://pdsapi.yourdomain.com}"
 
 # Function to check if PDS is running
 check_pds() {
@@ -115,15 +115,23 @@ echo "✅ PDS is running"
 # Create tokens directory
 mkdir -p tokens
 
+# Get domain from environment or prompt user
+DOMAIN="${PDS_HOSTNAME:-}"
+if [ -z "$DOMAIN" ]; then
+    read -p "Enter your domain (e.g., yourdomain.com): " DOMAIN
+fi
+
+# Remove any protocol prefixes
+DOMAIN=$(echo "$DOMAIN" | sed 's|^https?://||' | sed 's|^pdsapi\.||')
 
 # Define users to create
 declare -A users=(
-    ["admin.pdsapi.sfproject.net"]="admin@pdsapi.sfproject.net:adminpassword123"
-    ["test1.pdsapi.sfproject.net"]="test1@pdsapi.sfproject.net:testpassword123"
-    ["test2.pdsapi.sfproject.net"]="test2@pdsapi.sfproject.net:testpassword123"
-    ["demo.pdsapi.sfproject.net"]="demo@pdsapi.sfproject.net:demopassword123"
-    ["user1.pdsapi.sfproject.net"]="user1@pdsapi.sfproject.net:userpassword123"
-    ["user2.pdsapi.sfproject.net"]="user2@pdsapi.sfproject.net:userpassword123"
+    ["admin.$DOMAIN"]="admin@$DOMAIN:adminpassword123"
+    ["test1.$DOMAIN"]="test1@$DOMAIN:testpassword123"
+    ["test2.$DOMAIN"]="test2@$DOMAIN:testpassword123"
+    ["demo.$DOMAIN"]="demo@$DOMAIN:demopassword123"
+    ["user1.$DOMAIN"]="user1@$DOMAIN:userpassword123"
+    ["user2.$DOMAIN"]="user2@$DOMAIN:userpassword123"
 )
 
 # Create users
@@ -147,12 +155,12 @@ if [ ${#successful_users[@]} -gt 0 ]; then
     
     # Welcome posts for each user
     declare -A welcome_posts=(
-        ["admin.pdsapi.sfproject.net"]="Welcome to our self-hosted Bluesky instance! 🌟 I'm the admin and I'm excited to see you here."
-        ["test1.pdsapi.sfproject.net"]="Hello everyone! This is test1 checking in. The AT Protocol is amazing! 🚀"
-        ["test2.pdsapi.sfproject.net"]="Hey there! Test2 here. Loving this decentralized social media experience! ✨"
-        ["demo.pdsapi.sfproject.net"]="Welcome to the demo! This is what a self-hosted Bluesky instance looks like. 🎉"
-        ["user1.pdsapi.sfproject.net"]="Hi friends! User1 here. Excited to be part of this community! 👋"
-        ["user2.pdsapi.sfproject.net"]="Greetings! User2 checking in. The future of social media is decentralized! 🌐"
+        ["admin.$DOMAIN"]="Welcome to our self-hosted Bluesky instance! 🌟 I'm the admin and I'm excited to see you here."
+        ["test1.$DOMAIN"]="Hello everyone! This is test1 checking in. The AT Protocol is amazing! 🚀"
+        ["test2.$DOMAIN"]="Hey there! Test2 here. Loving this decentralized social media experience! ✨"
+        ["demo.$DOMAIN"]="Welcome to the demo! This is what a self-hosted Bluesky instance looks like. 🎉"
+        ["user1.$DOMAIN"]="Hi friends! User1 here. Excited to be part of this community! 👋"
+        ["user2.$DOMAIN"]="Greetings! User2 checking in. The future of social media is decentralized! 🌐"
     )
     
     for handle in "${successful_users[@]}"; do
@@ -163,7 +171,7 @@ if [ ${#successful_users[@]} -gt 0 ]; then
     done
     
     # Create some additional posts for admin
-    if [[ " ${successful_users[@]} " =~ " admin.pdsapi.sfproject.net " ]]; then
+    if [[ " ${successful_users[@]} " =~ " admin.$DOMAIN " ]]; then
         additional_posts=(
             "This instance is running on the AT Protocol, which means you own your data! 🔐"
             "You can customize this instance, add features, and make it your own. 🛠️"
@@ -172,7 +180,7 @@ if [ ${#successful_users[@]} -gt 0 ]; then
         )
         
         for post in "${additional_posts[@]}"; do
-            create_post "admin.pdsapi.sfproject.net" "tokens/admin.pdsapi.sfproject.net.token" "$post"
+            create_post "admin.$DOMAIN" "tokens/admin.$DOMAIN.token" "$post"
             echo ""
         done
     fi
