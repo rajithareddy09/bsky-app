@@ -100,7 +100,7 @@ cd ..
 # Step 5: Generate keys
 echo ""
 echo "🔑 Step 5: Generating cryptographic keys..."
-./scripts/generate-keys.sh
+#./scripts/generate-keys.sh
 
 # Step 6: Configure environment
 echo ""
